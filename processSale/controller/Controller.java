@@ -5,6 +5,8 @@ import processSale.model.*;
 import processSale.model.dto.*;
 
 public class Controller {
+    private View view;
+
     private Printer printer;
     private Inventory inv;
     private Discount disc;
@@ -18,8 +20,20 @@ public class Controller {
         this.acc = acc;
     }
 
-    public void startSale(String date, String time){
+    public void setView(View view) {
+        this.view = view;
+    }
 
+    public void startSale(String date, String time){
+        currentSale = new Sale(date, time);
+        printer.createReceipt(currentSale.getTimeOfSale());
+    }
+
+    public void registerItem(String itemID){
+        if (!currentSale.itemExists(itemID)){
+            currentSale.addItem(inv.getItem(itemID));
+            
+        }
     }
 
 }
