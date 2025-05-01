@@ -17,6 +17,6 @@ public class Account {
      * 
      */
     public void accountSale(SaleSummaryDTO saleSummary){
-
+        
     }
 }

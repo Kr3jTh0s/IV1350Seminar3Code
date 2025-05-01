@@ -1,5 +1,8 @@
 package processSale.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import processSale.integration.*;
 import processSale.view.*;
 import processSale.model.*;
@@ -57,8 +60,9 @@ public class Controller {
      * @param date The date when the sale is started, in the format "YYYY-MM-DD".
      * @param time The time when the sale is started, in the format "HH:MM".
      */
-    public void startSale(String date, String time) {
-        currentSale = new Sale(date, time);
+    public void startSale() {
+
+        currentSale = new Sale();
         printer.createReceipt(currentSale.getTimeOfSale());
     }
 
@@ -70,7 +74,10 @@ public class Controller {
      * @param itemID The unique identifier of the item to be registered.
      */
     public void registerItem(String itemID) {
-        if (!currentSale.itemExists(itemID)) {
+        if (currentSale.itemExists(itemID)) {
+            currentSale.increaseItemQuantity(itemID);
+        }
+        else {
             currentSale.addItem(inv.getItem(itemID));
         }
     }
@@ -79,13 +86,15 @@ public class Controller {
      * 
      */
     public void endSale(String customerID) {
-
+        double totalPrice = currentSale.getRunningTotal();
+        // show view idk
     }
 
     /**
      * 
      */
-    public void processPayment(double amountPaid) {
-
+    public void processSale(double amountPaid) {
+        SaleSummaryDTO saleSummary = currentSale.processSale(amountPaid);
+        System.out.println(saleSummary.getChange());
     }
 }

@@ -23,6 +23,8 @@ public class Main {
         Controller contr = new Controller(printer, inv, disc, acc);
         View view = new View(contr);
 
-        view.awaitInputs();
+        view.startSale();
+
+        return;
     }
 }

@@ -17,4 +17,8 @@ public class SaleSummaryDTO {
         this.paymentInfo = paymentInfo;
     }
 
+    public double getChange() {
+        return this.paymentInfo.getChangeToGiveBack();
+    }
+
 }

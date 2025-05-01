@@ -28,6 +28,7 @@ public class View {
      */
     public void awaitInputs() {
         System.out.println("yo");
+        startSale();
     }
 
     /**
@@ -35,7 +36,15 @@ public class View {
      * the current time and date to the controller.
      */
     public void startSale() {
-        contr.startSale("today", "now");
+        contr.startSale();
+        contr.registerItem("1"); 
+        contr.registerItem("5");
+        contr.registerItem("4");
+        contr.registerItem("1");
+        contr.registerItem("5");
+        contr.registerItem("3");
+        contr.endSale("null");
+        contr.processSale(400);
     }
 
 }

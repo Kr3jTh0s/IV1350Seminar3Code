@@ -24,7 +24,7 @@ public class Printer {
     /**
      * 
      */
-    public void printReceipt(){
+    public void printReceipt(SaleSummaryDTO saleSummaryDTO){
         System.out.println(currentReceipt.getReceipt());
     }
 }

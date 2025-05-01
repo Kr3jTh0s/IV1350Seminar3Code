@@ -1,18 +1,21 @@
 package processSale.model.dto;
 
+import processSale.model.ItemList;
+
 /**
- * 
+ * might be an unnecessary dto class
  */
 public class BoughtItemsDTO {
-    private String itemName;
-    private Integer itemQuantity;
+    private ItemList boughtItems;
 
     /**
      * 
      */
-    public BoughtItemsDTO(){
-
+    public BoughtItemsDTO(ItemList boughtItemsList){
+        boughtItems = boughtItemsList;
     }
 
-    
+    public ItemList getBoughtItems() {
+        return boughtItems;
+    }
 }
