@@ -13,7 +13,7 @@ public class TimeOfSaleDTO {
      * @param timeStamp The date and time of the sale.
      */
     public TimeOfSaleDTO(String timeStamp) {
-        this.timeStamp = timeStamp; 
+        this.timeStamp = timeStamp;
     }
 
     /**

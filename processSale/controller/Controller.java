@@ -1,8 +1,5 @@
 package processSale.controller;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 import processSale.integration.*;
 import processSale.view.*;
 import processSale.model.*;
@@ -51,17 +48,9 @@ public class Controller {
     }
 
     /**
-     * Starts a new sale by creating a new Sale instance with the specified date and
-     * time.
-     * Also initializes the receipt creation process by using the printer to create
-     * a receipt
-     * with the time of the sale.
      * 
-     * @param date The date when the sale is started, in the format "YYYY-MM-DD".
-     * @param time The time when the sale is started, in the format "HH:MM".
      */
     public void startSale() {
-
         currentSale = new Sale();
         printer.createReceipt(currentSale.getTimeOfSale());
     }
@@ -76,25 +65,27 @@ public class Controller {
     public void registerItem(String itemID) {
         if (currentSale.itemExists(itemID)) {
             currentSale.increaseItemQuantity(itemID);
-        }
-        else {
+        } else {
             currentSale.addItem(inv.getItem(itemID));
         }
     }
 
     /**
      * 
+     * @param customerID
      */
     public void endSale(String customerID) {
         double totalPrice = currentSale.getRunningTotal();
-        // show view idk
     }
 
     /**
      * 
+     * @param amountPaid
      */
     public void processSale(double amountPaid) {
         SaleSummaryDTO saleSummary = currentSale.processSale(amountPaid);
-        System.out.println(saleSummary.getChange());
+        printer.printReceipt(saleSummary);
+        inv.updateInventory(saleSummary);
+        acc.accountSale(saleSummary);
     }
 }

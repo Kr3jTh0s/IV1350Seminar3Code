@@ -1,21 +1,26 @@
 package processSale.model.dto;
 
-import processSale.model.ItemList;
+import java.util.HashMap;
 
 /**
  * might be an unnecessary dto class
  */
 public class BoughtItemsDTO {
-    private ItemList boughtItems;
+    private HashMap<ItemDTO, Integer> boughtItems;
 
     /**
      * 
+     * @param boughtItemsList
      */
-    public BoughtItemsDTO(ItemList boughtItemsList){
+    public BoughtItemsDTO(HashMap<ItemDTO, Integer> boughtItemsList) {
         boughtItems = boughtItemsList;
     }
 
-    public ItemList getBoughtItems() {
+    /**
+     * 
+     * @return
+     */
+    public HashMap<ItemDTO, Integer> getBoughtItems() {
         return boughtItems;
     }
 }

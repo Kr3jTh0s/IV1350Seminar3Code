@@ -1,6 +1,6 @@
 package processSale.integration;
-import processSale.model.dto.*;
 
+import processSale.model.dto.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -12,13 +12,12 @@ public class Inventory {
 
     private File inventoryDatabase;
     private Scanner myReader;
-
     private ItemDTO[] ext_items;
 
     /**
      * 
      */
-    public Inventory(){
+    public Inventory() {
         try {
             inventoryDatabase = new File("acc.txt");
             myReader = new Scanner(inventoryDatabase);
@@ -32,18 +31,19 @@ public class Inventory {
 
                 ext_items[rowNumber++] = item;
             }
-
-            System.out.println(ext_items.length);
         } catch (FileNotFoundException e) {
             System.out.println("An error occured.");
             e.printStackTrace();
         }
+        System.out.println("Inventory created");
     }
 
     /**
      * 
+     * @param itemID
+     * @return
      */
-    public ItemDTO getItem(String itemID){
+    public ItemDTO getItem(String itemID) {
         for (int i = 0; i < ext_items.length; i++) {
             if (ext_items[i].getID().equalsIgnoreCase(itemID)) {
                 return ext_items[i];
@@ -53,7 +53,11 @@ public class Inventory {
         return null;
     }
 
-    public void updateInventory(SaleSummaryDTO saleSummaryDTO){
+    /**
+     * 
+     * @param saleSummaryDTO
+     */
+    public void updateInventory(SaleSummaryDTO saleSummaryDTO) {
 
     }
 }

@@ -21,7 +21,8 @@ public class Sale {
      */
     public Sale() {
         items = new ItemList();
-        timeOfSale = new TimeOfSaleDTO(new SimpleDateFormat("yyyy-MM-dd_HH:mm").format(Calendar.getInstance().getTime()));
+        timeOfSale = new TimeOfSaleDTO(
+                new SimpleDateFormat("yyyy-MM-dd_HH:mm").format(Calendar.getInstance().getTime()));
     }
 
     /**
@@ -54,8 +55,7 @@ public class Sale {
      */
     public void increaseItemQuantity(String itemID) {
         items.increaseQuantity(itemID);
-        updateRunningTotal(items.getItem(itemID));
-        updateVAT(items.getItem(itemID));
+        updateSale(items.getItem(itemID));
     }
 
     /**
@@ -66,25 +66,43 @@ public class Sale {
      */
     public void addItem(ItemDTO item) {
         items.addNewItem(item);
-        updateRunningTotal(item);
-        updateVAT(item);
+        updateSale(item);
     }
 
     /**
      * 
      * @param item
      */
-    private void updateRunningTotal(ItemDTO item){
+    private void updateRunningTotal(ItemDTO item) {
         runningTotal += item.getPrice();
     }
 
+    /**
+     * 
+     * @param item
+     */
+    private void updateVAT(ItemDTO item) {
+        totalVAT += (item.getPrice() * item.getVATRate());
+    }
 
     /**
      * 
      * @param item
      */
-    private void updateVAT(ItemDTO item){
-        totalVAT += (item.getPrice() * item.getVATRate());
+    private void updateSale(ItemDTO item) {
+        updateRunningTotal(item);
+        updateVAT(item);
+
+        // print
+        printSale();
+    }
+
+    /**
+     * 
+     */
+    private void printSale() {
+        System.out.println("Total cost ( incl VAT ): " + Math.round(runningTotal * 100.0) / 100 + " SEK\n" +
+                           "Total VAT: " + Math.round(totalVAT * 100.0) / 100 + " SEK\n");
     }
 
     /**
@@ -100,9 +118,10 @@ public class Sale {
      * @param amountPaid
      * @return
      */
-    public SaleSummaryDTO processSale(double amountPaid){
+    public SaleSummaryDTO processSale(double amountPaid) {
         ProcessPayment processedPayment = new ProcessPayment(amountPaid, runningTotal);
-        PaymentInfoDTO paymentInfo = new PaymentInfoDTO(amountPaid, processedPayment.getChange(), runningTotal, totalVAT);
-        return new SaleSummaryDTO(timeOfSale, null, paymentInfo);
+        PaymentInfoDTO paymentInfo = new PaymentInfoDTO(amountPaid, processedPayment.getChange(), runningTotal,
+                totalVAT);
+        return new SaleSummaryDTO(timeOfSale, items.getBoughtItemsDTO(), paymentInfo);
     }
 }

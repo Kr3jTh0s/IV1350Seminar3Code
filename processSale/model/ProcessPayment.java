@@ -8,15 +8,27 @@ class ProcessPayment {
 
     /**
      * 
+     * @param amountPaid
+     * @param totalPrice
      */
-    public ProcessPayment(double amountPaid, double totalPrice){
-        double changeToGiveBack = calculateChange(amountPaid, totalPrice);
+    public ProcessPayment(double amountPaid, double totalPrice) {
+        changeToGiveBack = calculateChange(amountPaid, totalPrice);
     }
 
-    private double calculateChange(double amountPaid, double totalPrice){
+    /**
+     * 
+     * @param amountPaid
+     * @param totalPrice
+     * @return
+     */
+    private double calculateChange(double amountPaid, double totalPrice) {
         return (amountPaid - totalPrice);
     }
 
+    /**
+     * 
+     * @return
+     */
     public double getChange() {
         return changeToGiveBack;
     }
