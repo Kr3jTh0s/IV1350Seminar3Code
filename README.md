@@ -1,11 +1,10 @@
 # IV1350Seminar3Code
 My code solution for the seminar 3 tasks.
 
-To compile code type:
-    main code:
-        $ javac src/main/java/processSale/*/*.java src/main/java/processSale/*/*/*.java
-in terminal.
+To compile main code type in terminal:
 
-To run main code type:
+    javac src/main/java/processSale/*/*.java src/main/java/processSale/*/*/*.java
+
+To run main code type in terminal:
+
     java src.main.java.processSale.startup.Main
-in terminal.
