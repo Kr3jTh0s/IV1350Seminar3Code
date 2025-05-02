@@ -38,8 +38,10 @@ public class ItemList {
      */
     public void increaseQuantity(String itemID) {
         int quantity = getItemQuantity(itemID);
-        itemsQuantity.put(itemID, ++quantity);
-        printAddedItem(getItem(itemID));
+        if (quantity != 0) {
+            itemsQuantity.put(itemID, ++quantity);
+            printAddedItem(getItem(itemID));
+        }
     }
 
     /**

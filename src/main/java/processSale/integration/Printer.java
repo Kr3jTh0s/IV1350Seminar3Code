@@ -37,6 +37,10 @@ public class Printer {
             System.out.println("No receipt has been created. Please create a receipt first.");
             return;
         }
+        if (saleSummaryDTO == null) {
+            System.out.println("Sale summary is null.");
+            return;
+        }
         currentReceipt.printReceipt(saleSummaryDTO);
     }
 }
