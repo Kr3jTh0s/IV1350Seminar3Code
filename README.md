@@ -8,3 +8,7 @@ in terminal.
 To run code type:
     java processSale.startup.Main
 in terminal.
+
+javac -d out/main -cp "lib\*" src/main/java/processSale/*/*.java src/main/java/processSale/*/*/*.java
+
+javac -d out/test -cp "lib\*" src/test/java/*/*.java src/test/java/*/*.java

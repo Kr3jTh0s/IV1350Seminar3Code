@@ -1,16 +1,15 @@
-package processSale.model.dto;
+package src.main.java.processSale.model.dto;
 
 /**
- * This class represents a Data Transfer Object (DTO) for an item.
- * It contains information about the item's name, ID, description, price, and
- * VAT rate.
+ * A Data Transfer Object (DTO) representing an item. It contains information 
+ * about the item's name, ID, description, price, and VAT rate.
  */
 public class ItemDTO {
-    private String name;
-    private String ID;
-    private String description;
-    private double price;
-    private double VATRate;
+    private final String name;        // The name of the item
+    private final String ID;          // The unique identifier of the item
+    private final String description; // A brief description of the item
+    private final double price;       // The price of the item
+    private final double VATRate;     // The VAT rate applicable to the item
 
     /**
      * Creates a new instance of ItemDTO with the specified attributes.
@@ -30,7 +29,7 @@ public class ItemDTO {
     }
 
     /**
-     * Gets the name of the item.
+     * Retrieves the name of the item.
      * 
      * @return The name of the item as a string.
      */
@@ -39,7 +38,7 @@ public class ItemDTO {
     }
 
     /**
-     * Gets the unique identifier of the item.
+     * Retrieves the unique identifier of the item.
      * 
      * @return The ID of the item as a string.
      */
@@ -48,7 +47,7 @@ public class ItemDTO {
     }
 
     /**
-     * Gets the description of the item.
+     * Retrieves the description of the item.
      * 
      * @return The description of the item as a string.
      */
@@ -57,7 +56,7 @@ public class ItemDTO {
     }
 
     /**
-     * Gets the price of the item.
+     * Retrieves the price of the item.
      * 
      * @return The price of the item as a double.
      */
@@ -66,7 +65,7 @@ public class ItemDTO {
     }
 
     /**
-     * Gets the VAT rate applicable to the item.
+     * Retrieves the VAT rate applicable to the item.
      * 
      * @return The VAT rate of the item as a double.
      */
