@@ -48,17 +48,10 @@ public class Controller {
     }
 
     /**
-     * Starts a new sale by creating a new Sale instance with the specified date and
-     * time.
-     * Also initializes the receipt creation process by using the printer to create
-     * a receipt
-     * with the time of the sale.
      * 
-     * @param date The date when the sale is started, in the format "YYYY-MM-DD".
-     * @param time The time when the sale is started, in the format "HH:MM".
      */
-    public void startSale(String date, String time) {
-        currentSale = new Sale(date, time);
+    public void startSale() {
+        currentSale = new Sale();
         printer.createReceipt(currentSale.getTimeOfSale());
     }
 
@@ -70,22 +63,29 @@ public class Controller {
      * @param itemID The unique identifier of the item to be registered.
      */
     public void registerItem(String itemID) {
-        if (!currentSale.itemExists(itemID)) {
+        if (currentSale.itemExists(itemID)) {
+            currentSale.increaseItemQuantity(itemID);
+        } else {
             currentSale.addItem(inv.getItem(itemID));
         }
     }
 
     /**
      * 
+     * @param customerID
      */
     public void endSale(String customerID) {
-
+        double totalPrice = currentSale.getRunningTotal();
     }
 
     /**
      * 
+     * @param amountPaid
      */
-    public void processPayment(double amountPaid) {
-
+    public void processSale(double amountPaid) {
+        SaleSummaryDTO saleSummary = currentSale.processSale(amountPaid);
+        printer.printReceipt(saleSummary);
+        inv.updateInventory(saleSummary);
+        acc.accountSale(saleSummary);
     }
 }

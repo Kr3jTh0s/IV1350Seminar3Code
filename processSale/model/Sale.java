@@ -1,5 +1,7 @@
 package processSale.model;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import processSale.model.dto.*;
 
 /**
@@ -9,24 +11,18 @@ import processSale.model.dto.*;
  */
 public class Sale {
     private TimeOfSaleDTO timeOfSale;
-    private ItemHandler items;
-    private BoughtItemsDTO boughtItems;
-    private SaleSummaryDTO saleSummary; // may not need to be here yet
+    private ItemList items;
     private double runningTotal;
     private double totalVAT;
-    private double discount;
+    // private double discount;
 
     /**
-     * Creates a new instance of the Sale class, initializing the time of sale
-     * and the item handler. The time of sale is represented by a TimeOfSaleDTO
-     * object, which is created using the provided date and time.
      * 
-     * @param date The date of the sale in string format.
-     * @param time The time of the sale in string format.
      */
-    public Sale(String date, String time) {
-        timeOfSale = new TimeOfSaleDTO(date, time);
-        items = new ItemHandler();
+    public Sale() {
+        items = new ItemList();
+        timeOfSale = new TimeOfSaleDTO(
+                new SimpleDateFormat("yyyy-MM-dd_HH:mm").format(Calendar.getInstance().getTime()));
     }
 
     /**
@@ -47,7 +43,19 @@ public class Sale {
      *         {@code false}.
      */
     public boolean itemExists(String itemID) {
-        return items.findItem(itemID);
+        return items.checkItem(itemID);
+    }
+
+    /**
+     * Increases the quantity of an item in the current sale based on its item ID.
+     * If the item does not exist in the sale, no action is taken.
+     * 
+     * @param itemID The unique identifier of the item whose quantity is to be
+     *               increased.
+     */
+    public void increaseItemQuantity(String itemID) {
+        items.increaseQuantity(itemID);
+        updateSale(items.getItem(itemID));
     }
 
     /**
@@ -57,6 +65,63 @@ public class Sale {
      *             to the sale.
      */
     public void addItem(ItemDTO item) {
-        items.addItem(item);
+        items.addNewItem(item);
+        updateSale(item);
+    }
+
+    /**
+     * 
+     * @param item
+     */
+    private void updateRunningTotal(ItemDTO item) {
+        runningTotal += item.getPrice();
+    }
+
+    /**
+     * 
+     * @param item
+     */
+    private void updateVAT(ItemDTO item) {
+        totalVAT += (item.getPrice() * item.getVATRate());
+    }
+
+    /**
+     * 
+     * @param item
+     */
+    private void updateSale(ItemDTO item) {
+        updateRunningTotal(item);
+        updateVAT(item);
+
+        // print
+        printSale();
+    }
+
+    /**
+     * 
+     */
+    private void printSale() {
+        System.out.println("Total cost ( incl VAT ): " + Math.round(runningTotal * 100.0) / 100 + " SEK\n" +
+                           "Total VAT: " + Math.round(totalVAT * 100.0) / 100 + " SEK\n");
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public double getRunningTotal() {
+        return runningTotal;
+    }
+
+    /**
+     * 
+     * @param amountPaid
+     * @return
+     */
+    public SaleSummaryDTO processSale(double amountPaid) {
+        ProcessPayment processedPayment = new ProcessPayment(amountPaid, runningTotal);
+        PaymentInfoDTO paymentInfo = new PaymentInfoDTO(amountPaid, processedPayment.getChange(), runningTotal,
+                totalVAT);
+        return new SaleSummaryDTO(timeOfSale, items.getBoughtItemsDTO(), paymentInfo);
     }
 }

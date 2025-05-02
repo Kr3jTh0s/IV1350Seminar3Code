@@ -8,17 +8,21 @@ package processSale.model.dto;
 public class PaymentInfoDTO {
     private double amountPaid;
     private double changeToGiveBack;
+    private double totalPrice;
+    private double totalVAT;
 
     /**
-     * Creates a new instance of PaymentInfoDTO with the specified amount paid and
-     * change to give back.
      * 
-     * @param amountPaid The total amount paid by the customer.
-     * @param change     The change to be given back to the customer.
+     * @param amountPaid
+     * @param change
+     * @param runningTotal
+     * @param totalVAT
      */
-    public PaymentInfoDTO(double amountPaid, double change) {
+    public PaymentInfoDTO(double amountPaid, double change, double runningTotal, double totalVAT) {
         this.amountPaid = amountPaid;
         changeToGiveBack = change;
+        totalPrice = runningTotal;
+        this.totalVAT = totalVAT;
     }
 
     /**
@@ -37,5 +41,21 @@ public class PaymentInfoDTO {
      */
     public double getChangeToGiveBack() {
         return changeToGiveBack;
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public double getTotalVAT() {
+        return totalVAT;
     }
 }

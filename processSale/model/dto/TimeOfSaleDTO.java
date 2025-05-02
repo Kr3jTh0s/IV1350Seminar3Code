@@ -5,18 +5,15 @@ package processSale.model.dto;
  * It contains the date and time of the sale as strings.
  */
 public class TimeOfSaleDTO {
-    private String date;
-    private String time;
+    private String timeStamp;
 
     /**
      * Creates a new instance representing the time of a sale.
      * 
-     * @param date The date of the sale.
-     * @param time The time of the sale.
+     * @param timeStamp The date and time of the sale.
      */
-    public TimeOfSaleDTO(String date, String time) {
-        this.date = date;
-        this.time = time;
+    public TimeOfSaleDTO(String timeStamp) {
+        this.timeStamp = timeStamp;
     }
 
     /**
@@ -24,16 +21,7 @@ public class TimeOfSaleDTO {
      * 
      * @return The date of the sale as a string.
      */
-    public String getDate() {
-        return date;
-    }
-
-    /**
-     * Returns the time of the sale.
-     * 
-     * @return The time of the sale as a string.
-     */
-    public String getTime() {
-        return time;
+    public String getTimeStamp() {
+        return timeStamp;
     }
 }

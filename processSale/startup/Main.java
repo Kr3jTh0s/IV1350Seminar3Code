@@ -13,7 +13,7 @@ import processSale.view.*;
  */
 public class Main {
     public static void main(String[] args) {
-        System.out.println("yo");
+        System.out.println("----------Startup----------");
 
         Printer printer = new Printer();
         Inventory inv = new Inventory();
@@ -23,6 +23,10 @@ public class Main {
         Controller contr = new Controller(printer, inv, disc, acc);
         View view = new View(contr);
 
+        System.out.println("-----Startup Finished-----\n");
+
         view.awaitInputs();
+
+        return;
     }
 }

@@ -1,4 +1,5 @@
 package processSale.integration;
+
 import processSale.model.dto.*;
 
 /**
@@ -10,21 +11,23 @@ public class Printer {
     /**
      * 
      */
-    public Printer(){
-        System.out.println("Printer");
+    public Printer() {
+        System.out.println("Printer created");
     }
 
     /**
      * 
+     * @param timeOfSale
      */
-    public void createReceipt(TimeOfSaleDTO timeOfSale){
+    public void createReceipt(TimeOfSaleDTO timeOfSale) {
         currentReceipt = new Receipt(timeOfSale);
     }
 
     /**
      * 
+     * @param saleSummaryDTO
      */
-    public void printReceipt(){
-        System.out.println(currentReceipt.getReceipt());
+    public void printReceipt(SaleSummaryDTO saleSummaryDTO) {
+        currentReceipt.printReceipt(saleSummaryDTO);
     }
 }
