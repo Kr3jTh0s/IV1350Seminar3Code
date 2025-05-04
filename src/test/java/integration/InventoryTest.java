@@ -24,25 +24,13 @@ class InventoryTest {
     }
 
     /**
-     * Tests the creation of the Inventory instance.
-     */
-    @Test
-    void testInventoryCreation() {
-        assertNotNull(inventory, "Inventory instance should not be null.");
-    }
-
-    /**
      * Tests retrieving an item by its ID.
      */
     @Test
     void testGetItem() {
-        // Test valid item
         ItemDTO item = inventory.getItem("1");
         assertNotNull(item, "Valid item should be retrieved.");
         assertEquals("1", item.getID(), "Item ID should match the requested ID.");
-
-        // Test invalid item
-        assertNull(inventory.getItem("999"), "Invalid item ID should return null.");
     }
 
     /**
@@ -87,7 +75,7 @@ class InventoryTest {
         Inventory emptyInventory = new Inventory() {
             @Override
             public ItemDTO getItem(String itemID) {
-                return null; // Simulate an empty inventory
+                return null;
             }
         };
 

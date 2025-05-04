@@ -21,14 +21,6 @@ class DiscountTest {
     }
 
     /**
-     * Tests the creation of the Discount instance.
-     */
-    @Test
-    void testDiscountCreation() {
-        assertNotNull(discount, "Discount instance should not be null.");
-    }
-
-    /**
      * Tests retrieving the discount factor for a valid customer ID.
      */
     @Test

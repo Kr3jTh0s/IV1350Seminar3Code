@@ -44,14 +44,9 @@ class ControllerTest {
     void testRegisterItem() {
         controller.startSale();
 
-        // Test registering a valid item
         assertDoesNotThrow(() -> controller.registerItem("1"), "Registering a valid item should not throw an exception.");
-
-        // Test registering the same item again (increasing quantity)
         controller.registerItem("1");
         assertDoesNotThrow(() -> controller.registerItem("1"), "Registering the same item again should not throw an exception.");
-
-        // Test registering an invalid item
         assertDoesNotThrow(() -> controller.registerItem("999"), "Registering an invalid item should not throw an exception.");
     }
 
@@ -74,10 +69,7 @@ class ControllerTest {
         controller.registerItem("1");
         controller.endSale("customer123");
 
-        // Test with exact payment
         assertDoesNotThrow(() -> controller.processSale(10.0), "Processing a sale with exact payment should not throw an exception.");
-
-        // Test with overpayment
         assertDoesNotThrow(() -> controller.processSale(15.0), "Processing a sale with overpayment should not throw an exception.");
     }
 
@@ -90,7 +82,6 @@ class ControllerTest {
         controller.registerItem("1");
         controller.endSale("customer123");
 
-        // Test with insufficient payment
         assertDoesNotThrow(() -> controller.processSale(5.0), "Processing a sale with insufficient payment should not throw an exception.");
     }
 

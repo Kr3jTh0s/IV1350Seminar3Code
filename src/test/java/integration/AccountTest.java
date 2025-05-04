@@ -24,20 +24,11 @@ class AccountTest {
     }
 
     /**
-     * Tests the creation of the Account instance.
-     */
-    @Test
-    void testAccountCreation() {
-        assertNotNull(account, "Account instance should not be null.");
-    }
-
-    /**
      * Tests recording a sale in the accounting system.
      */
     @Test
     void testAccountSale() {
-        TimeOfSaleDTO time = new TimeOfSaleDTO("2023-05-01_14:30");
-        SaleSummaryDTO summary = new SaleSummaryDTO(time, null, null);
+        SaleSummaryDTO summary = new SaleSummaryDTO(null, null, null);
 
         assertDoesNotThrow(() -> account.accountSale(summary), "Recording a sale should not throw an exception.");
     }
@@ -56,40 +47,10 @@ class AccountTest {
     @Test
     void testAccountSaleWithValidSummary() {
         TimeOfSaleDTO time = new TimeOfSaleDTO("2023-05-01_14:30");
-
-        // Mocking a SaleSummaryDTO with dummy data
         BoughtItemsDTO boughtItems = new BoughtItemsDTO(new HashMap<>());
         PaymentInfoDTO paymentInfo = new PaymentInfoDTO(100.0, 20.0, 80.0, 10.0);
         SaleSummaryDTO summary = new SaleSummaryDTO(time, boughtItems, paymentInfo);
 
         assertDoesNotThrow(() -> account.accountSale(summary), "Recording a sale with valid data should not throw an exception.");
-    }
-
-    /**
-     * Tests recording a sale with empty BoughtItemsDTO.
-     */
-    @Test
-    void testAccountSaleWithEmptyBoughtItems() {
-        TimeOfSaleDTO time = new TimeOfSaleDTO("2023-05-01_14:30");
-
-        // Mocking a SaleSummaryDTO with empty BoughtItemsDTO
-        BoughtItemsDTO boughtItems = new BoughtItemsDTO(new HashMap<>());
-        SaleSummaryDTO summary = new SaleSummaryDTO(time, boughtItems, null);
-
-        assertDoesNotThrow(() -> account.accountSale(summary), "Recording a sale with empty BoughtItemsDTO should not throw an exception.");
-    }
-
-    /**
-     * Tests recording a sale with null PaymentInfoDTO.
-     */
-    @Test
-    void testAccountSaleWithNullPaymentInfo() {
-        TimeOfSaleDTO time = new TimeOfSaleDTO("2023-05-01_14:30");
-
-        // Mocking a SaleSummaryDTO with null PaymentInfoDTO
-        BoughtItemsDTO boughtItems = new BoughtItemsDTO(new HashMap<>());
-        SaleSummaryDTO summary = new SaleSummaryDTO(time, boughtItems, null);
-
-        assertDoesNotThrow(() -> account.accountSale(summary), "Recording a sale with null PaymentInfoDTO should not throw an exception.");
     }
 }

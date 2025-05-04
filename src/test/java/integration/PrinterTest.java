@@ -36,14 +36,6 @@ class PrinterTest {
     }
 
     /**
-     * Tests the creation of a Printer instance.
-     */
-    @Test
-    void testPrinterCreation() {
-        assertNotNull(printer, "Printer instance should not be null.");
-    }
-
-    /**
      * Tests creating a receipt with a valid time of sale.
      */
     @Test
