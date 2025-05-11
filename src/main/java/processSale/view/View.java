@@ -33,6 +33,18 @@ public class View {
     public void awaitInputs() {
         testing.awaitStartInputs();
     }
+
+    public void itemNotFound(String itemID) {
+        System.out.println("Item not found in inventory: " + itemID);
+    }
+
+    public void displayTotalPrice(double totalPrice){
+        System.out.printf("Sale ended. Total price: %.2f SEK%n", totalPrice);
+    }
+
+    public void displayAddedItem(String addedItem) {
+        System.out.println(addedItem);
+    }
 }
 
 /**

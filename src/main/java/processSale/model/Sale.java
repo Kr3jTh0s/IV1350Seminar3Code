@@ -51,22 +51,29 @@ public class Sale {
      * 
      * @param itemID The unique identifier of the item whose quantity is to be
      *               increased.
+     * @return The added item's information and the updated sale totals as a
+     *         string.
      */
-    public void increaseItemQuantity(String itemID) {
+    public String increaseItemQuantity(String itemID) {
         if (items.checkItem(itemID)) {
-            items.increaseQuantity(itemID);
+            String addedItem = items.increaseQuantity(itemID);
             updateSale(items.getItem(itemID));
+            return addedItem + printTotals();
         }
+        return "Item not found in cart.";
     }
 
     /**
      * Adds a new item to the current sale and updates the sale totals.
      * 
      * @param item The {@link ItemDTO} object representing the item to be added.
+     * @return The added item's information and the updated sale totals as a
+     *         string.
      */
-    public void addItem(ItemDTO item) {
-        items.addNewItem(item);
+    public String addItem(ItemDTO item) {
+        String addedItem = items.addNewItem(item);
         updateSale(item);
+        return addedItem + printTotals();
     }
 
     /**
@@ -75,17 +82,20 @@ public class Sale {
      * @param item The {@link ItemDTO} object used to update the totals.
      */
     private void updateSale(ItemDTO item) {
-        runningTotal += item.getPrice(); // Add item price to the running total
-        totalVAT += item.getPrice() * item.getVATRate(); // Add VAT for the item
-        printSale(); // Print the updated sale summary
+        runningTotal += item.getPrice();
+        totalVAT += item.getPrice() * item.getVATRate();
     }
 
     /**
-     * Prints the current sale summary, including the total cost and VAT.
+     * Creates a printout of the current sale's total cost and VAT.
+     * 
+     * @return The current sale's total cost and VAT as a string.
      */
-    private void printSale() {
-        System.out.printf("Total cost (incl. VAT): %.2f SEK%n", runningTotal);
-        System.out.printf("Total VAT: %.2f SEK%n%n", totalVAT);
+    private String printTotals() {
+        String updatedTotals = String.format("Total cost (incl. VAT): %.2f SEK%n" +
+                                             "Total VAT: %.2f SEK%n%n",
+                                             runningTotal, totalVAT);
+        return updatedTotals;
     }
 
     /**

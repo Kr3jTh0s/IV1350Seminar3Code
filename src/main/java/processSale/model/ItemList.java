@@ -35,13 +35,16 @@ public class ItemList {
      * Increases the quantity of an existing item in the list.
      * 
      * @param itemID The unique identifier of the item.
+     * @return The id, name, price, VAT and description of the added item
+     *         as a string.
      */
-    public void increaseQuantity(String itemID) {
+    public String increaseQuantity(String itemID) {
         int quantity = getItemQuantity(itemID);
         if (quantity != 0) {
             itemsQuantity.put(itemID, ++quantity);
-            printAddedItem(getItem(itemID));
+            return GetAddedItemPrintOut(getItem(itemID));
         }
+        return "An error ocurred. Could not add item.";
     }
 
     /**
@@ -55,30 +58,33 @@ public class ItemList {
     }
 
     /**
-     * Adds a new item to the list with an initial quantity of 1.
+     * Adds a new item to the list with an initial quantity of 1 before
+     * returning a printout of the added item information.
      * 
      * @param item The {@link ItemDTO} object representing the item to add.
+     * @return The id, name, price, VAT and description of the added item
+     *         as a string.
      */
-    public void addNewItem(ItemDTO item) {
+    public String addNewItem(ItemDTO item) {
         itemsMeta.put(item.getID(), item);
         itemsQuantity.put(item.getID(), 1);
-        printAddedItem(item);
+        return GetAddedItemPrintOut(item);
     }
 
     /**
-     * Prints the details of an added or updated item.
+     * Creates a printout of the details of an added or updated item.
      * 
      * @param item The {@link ItemDTO} object representing the item.
+     * @return The id, name, price, VAT and description of the added item
+     *         as a string.
      */
-    private void printAddedItem(ItemDTO item) {
-        System.out.printf(
-            "Added 1 item with ID %s:%n" +
-            "Item Name: %s%n" +
-            "Price: %.2f SEK%n" +
-            "VAT: %.0f%%%n" +
-            "Description: %s%n%n",
-            item.getID(), item.getName(), item.getPrice(), item.getVATRate() * 100, item.getDescription()
-        );
+    private String GetAddedItemPrintOut(ItemDTO item) {
+        return String.format("Added 1 item with ID %s:%n" +
+                             "Item Name: %s%n" +
+                             "Price: %.2f SEK%n" +
+                             "VAT: %.0f%%%n" +
+                             "Description: %s%n%n",
+                             item.getID(), item.getName(), item.getPrice(), item.getVATRate() * 100, item.getDescription());
     }
 
     /**

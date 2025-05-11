@@ -61,13 +61,13 @@ public class Controller {
      */
     public void registerItem(String itemID) {
         if (currentSale.itemExists(itemID)) {
-            currentSale.increaseItemQuantity(itemID);
+            view.displayAddedItem(currentSale.increaseItemQuantity(itemID));
         } else {
             ItemDTO item = inv.getItem(itemID);
             if (item != null) {
-                currentSale.addItem(item);
+                view.displayAddedItem(currentSale.addItem(item));
             } else {
-                System.out.println("Item not found in inventory: " + itemID);
+                view.itemNotFound(itemID);
             }
         }
     }
@@ -81,7 +81,7 @@ public class Controller {
      */
     public void endSale(String customerID) {
         double totalPrice = currentSale.getRunningTotal();
-        System.out.printf("Sale ended. Total price: %.2f SEK%n", totalPrice);
+        view.displayTotalPrice(totalPrice);
         // Future extension: Apply discounts or notify the view
     }
 
