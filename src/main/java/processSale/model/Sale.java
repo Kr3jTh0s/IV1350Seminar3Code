@@ -92,10 +92,9 @@ public class Sale {
      * @return The current sale's total cost and VAT as a string.
      */
     private String printTotals() {
-        String updatedTotals = String.format("Total cost (incl. VAT): %.2f SEK%n" +
-                                             "Total VAT: %.2f SEK%n%n",
-                                             runningTotal, totalVAT);
-        return updatedTotals;
+        return String.format("Total cost (incl. VAT): %.2f SEK%n" +
+                             "Total VAT: %.2f SEK%n%n",
+                             runningTotal, totalVAT);
     }
 
     /**
