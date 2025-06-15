@@ -54,13 +54,13 @@ public class Sale {
      * @return The added item's information and the updated sale totals as a
      *         string.
      */
-    public String increaseItemQuantity(String itemID) {
+    public ItemDTO increaseItemQuantity(String itemID) {
         if (items.checkItem(itemID)) {
-            String addedItem = items.increaseQuantity(itemID);
+            items.increaseQuantity(itemID);
             updateSale(items.getItem(itemID));
-            return addedItem + printTotals();
+            return (items.getItem(itemID));
         }
-        return "Item not found in cart.";
+        return null;
     }
 
     /**
@@ -70,10 +70,9 @@ public class Sale {
      * @return The added item's information and the updated sale totals as a
      *         string.
      */
-    public String addItem(ItemDTO item) {
-        String addedItem = items.addNewItem(item);
+    public void addItem(ItemDTO item) {
+        items.addNewItem(item);
         updateSale(item);
-        return addedItem + printTotals();
     }
 
     /**
@@ -91,9 +90,9 @@ public class Sale {
      * 
      * @return The current sale's total cost and VAT as a string.
      */
-    private String printTotals() {
+    public String getTotals() {
         return String.format("Total cost (incl. VAT): %.2f SEK%n" +
-                             "Total VAT: %.2f SEK%n%n",
+                             "Total VAT: %.2f SEK%n",
                              runningTotal, totalVAT);
     }
 

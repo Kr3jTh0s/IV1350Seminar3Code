@@ -3,44 +3,32 @@ package src.main.java.processSale.controller;
 import src.main.java.processSale.integration.*;
 import src.main.java.processSale.model.*;
 import src.main.java.processSale.model.dto.*;
-import src.main.java.processSale.view.*;
 
 /**
  * The Controller class manages the flow of the application. It acts as a
- * mediator between the view, model, and integration layers, handling user 
+ * mediator between the view, model, and integration layers, handling user
  * input and coordinating updates across the system.
  */
 public class Controller {
-    private View view;        // The view layer for user interaction
-    private Printer printer;  // Handles receipt printing
-    private Inventory inv;    // Manages inventory operations
-    private Discount disc;    // Handles discount operations
-    private Account acc;      // Handles accounting operations
-    private Sale currentSale; // Represents the ongoing sale
+    private Printer printer;           // Handles receipt printing
+    private Inventory inventorySystem; // Manages inventory operations
+    private Discount discountDatabase; // Handles discount operations
+    private Account accountingSystem;  // Handles accounting operations
+    private Sale currentSale;          // Represents the ongoing sale
 
     /**
      * Initializes the Controller with the required external system dependencies.
      * 
-     * @param printer The printer instance for printing receipts.
-     * @param inv     The inventory system for retrieving item information.
-     * @param disc    The discount system for applying discounts.
-     * @param acc     The accounting system for recording transactions.
+     * @param printer   The printer instance for printing receipts.
+     * @param inventory The inventory system for retrieving item information.
+     * @param discount  The discount system for applying discounts.
+     * @param account   The accounting system for recording transactions.
      */
-    public Controller(Printer printer, Inventory inv, Discount disc, Account acc) {
+    public Controller(Printer printer, Inventory inventory, Discount discount, Account account) {
         this.printer = printer;
-        this.inv = inv;
-        this.disc = disc;
-        this.acc = acc;
-    }
-
-    /**
-     * Sets the view instance for the controller, enabling communication with the
-     * view layer.
-     * 
-     * @param view The view instance to be set.
-     */
-    public void setView(View view) {
-        this.view = view;
+        this.inventorySystem = inventory;
+        this.discountDatabase = discount;
+        this.accountingSystem = account;
     }
 
     /**
@@ -59,17 +47,20 @@ public class Controller {
      * 
      * @param itemID The unique identifier of the item to be registered.
      */
-    public void registerItem(String itemID) {
+    public ItemDTO registerItem(String itemID) {
         if (currentSale.itemExists(itemID)) {
-            view.displayAddedItem(currentSale.increaseItemQuantity(itemID));
-        } else {
-            ItemDTO item = inv.getItem(itemID);
-            if (item != null) {
-                view.displayAddedItem(currentSale.addItem(item));
-            } else {
-                view.itemNotFound(itemID);
-            }
+            return currentSale.increaseItemQuantity(itemID);
         }
+
+        ItemDTO item = inventorySystem.getItem(itemID);
+        if (item != null) {
+            currentSale.addItem(item);
+        }
+        return item;
+    }
+
+    public String getTotals(){
+        return currentSale.getTotals();
     }
 
     /**
@@ -79,9 +70,8 @@ public class Controller {
      * 
      * @param customerID The unique identifier of the customer (currently unused).
      */
-    public void endSale(String customerID) {
-        double totalPrice = currentSale.getRunningTotal();
-        view.displayTotalPrice(totalPrice);
+    public double endSale(String customerID) {
+        return currentSale.getRunningTotal();
         // Future extension: Apply discounts or notify the view
     }
 
@@ -94,7 +84,7 @@ public class Controller {
     public void processSale(double amountPaid) {
         SaleSummaryDTO saleSummary = currentSale.processSale(amountPaid);
         printer.printReceipt(saleSummary);
-        inv.updateInventory(saleSummary);
-        acc.accountSale(saleSummary);
+        inventorySystem.updateInventory(saleSummary);
+        accountingSystem.accountSale(saleSummary);
     }
 }

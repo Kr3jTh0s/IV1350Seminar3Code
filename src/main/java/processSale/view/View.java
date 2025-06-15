@@ -2,7 +2,8 @@ package src.main.java.processSale.view;
 
 import java.util.Scanner;
 
-import src.main.java.processSale.controller.*;
+import src.main.java.processSale.controller.Controller;
+import src.main.java.processSale.model.dto.ItemDTO;
 
 /**
  * The View class represents the user interface layer of the application.
@@ -11,39 +12,55 @@ import src.main.java.processSale.controller.*;
  * actions and passing user inputs to the Controller.
  */
 public class View {
-    private final Controller contr; // The controller instance used by this view
-    private final TestView testing; // A helper class for testing user interactions
+    private final Controller controller; // The controller instance used by this view
+    private final TestView testing;      // A helper class for testing user interactions
 
     /**
      * Creates a new instance of the View class and sets up the connection
      * with the Controller. The Controller is provided as a parameter and
      * is used to delegate operations initiated by the View.
      *
-     * @param contr The controller instance to be used by this view.
+     * @param controller The controller instance to be used by this view.
      */
-    public View(Controller contr) {
-        this.contr = contr;
-        contr.setView(this);
-        testing = new TestView(contr, this); // Initialize the test view
+    public View(Controller controller) {
+        this.controller = controller;
+        testing = new TestView(controller, this);
     }
 
     /**
      * Starts the user interaction by delegating to the TestView class.
      */
     public void awaitInputs() {
-        testing.awaitStartInputs();
+        testing.awaitInputs();
     }
 
     public void itemNotFound(String itemID) {
         System.out.println("Item not found in inventory: " + itemID);
     }
 
-    public void displayTotalPrice(double totalPrice){
+    public void displayTotalPrice(double totalPrice) {
         System.out.printf("Sale ended. Total price: %.2f SEK%n", totalPrice);
     }
 
     public void displayAddedItem(String addedItem) {
         System.out.println(addedItem);
+        System.out.println(controller.getTotals());
+    }
+
+    /**
+     * Creates a printout of the details of an added or updated item.
+     * 
+     * @param item The {@link ItemDTO} object representing the item.
+     * @return The id, name, price, VAT and description of the added item
+     *         as a string.
+     */
+    public void printAddedItem(ItemDTO item) {
+        displayAddedItem(String.format("Added 1 item with ID %s:%n" +
+                "Item Name: %s%n" +
+                "Price: %.2f SEK%n" +
+                "VAT: %.0f%%%n" +
+                "Description: %s%n",
+                item.getID(), item.getName(), item.getPrice(), item.getVATRate() * 100, item.getDescription()));
     }
 }
 
@@ -52,8 +69,9 @@ public class View {
  * It provides a simple console-based interface for interacting with the system.
  */
 class TestView {
-    private final Controller contr; // The controller instance
-    private final View view;        // The main view instance
+    private final Controller controller;
+    private final Outputs out = new Outputs();
+    private final View view;
 
     private enum StartInputs {
         AUTO, START, EXIT
@@ -64,108 +82,146 @@ class TestView {
     }
 
     /**
-     * Creates a new instance of TestView.
-     *
-     * @param contr The controller instance.
-     * @param view  The main view instance.
+     * Helper class for printing prompts and messages.
      */
-    public TestView(Controller contr, View view) {
-        this.contr = contr;
+    private static class Outputs {
+        void printAwaitStart() {
+            System.out.println("""
+                    Enter:
+                    AUTO - to automate real quick
+                    START - to start new sale
+                    EXIT - to exit program
+                    """);
+        }
+
+        void printAwaitRegister() {
+            System.out.println("""
+                    Enter:
+                    [item identifier] - to register item
+                    END - to end sale
+                    EXIT - to exit program
+                    """);
+        }
+
+        void printAwaitPayment() {
+            System.out.println("Enter: \n[payment] - to process payment\n");
+        }
+
+        void printInvalidInput() {
+            System.out.println("Invalid input.");
+        }
+    }
+
+    /**
+     * Creates the TestView.
+     *
+     * @param controller The controller instance.
+     * @param view       The main view instance.
+     */
+    public TestView(Controller controller, View view) {
+        this.controller = controller;
         this.view = view;
     }
 
     /**
-     * Waits for user input to start the application.
+     * Main loop for handling user input and navigating between stages.
      */
-    public void awaitStartInputs() {
-        try (Scanner inputScanner = new Scanner(System.in)) {
-            boolean exit = false;
-            while (!exit) {
-                System.out.println("Enter: \n" +
-                                   "AUTO - to automate real quick\n" +
-                                   "START - to start new sale\n" +
-                                   "EXIT - to exit program\n");
-
-                String userInput = inputScanner.nextLine();
-                if (checkStartInputs(userInput)) {
-                    switch (getStartInput(userInput)) {
-                        case AUTO -> {
-                            autoRegister();
-                            exit = true;
-                        }
-                        case START -> startSale(inputScanner);
-                        case EXIT -> exit = true;
-                    }
-                } else {
-                    System.out.println("Invalid input.");
+    public void awaitInputs() {
+        try (Scanner scanner = new Scanner(System.in)) {
+            int stage = 1;
+            while (true) {
+                switch (stage) {
+                    case 1 -> stage = handleStartMenu(scanner);
+                    case 2 -> stage = handleRegisterMenu(scanner);
+                    case 3 -> stage = handlePaymentMenu(scanner);
+                    case 4 -> stage = autoRegister();
+                    case 5 -> System.exit(0);
                 }
             }
         }
-        System.exit(0);
     }
 
-    private boolean checkStartInputs(String input) {
-        return isValidInput(input, StartInputs.values());
-    }
-
-    private StartInputs getStartInput(String input) {
-        return StartInputs.valueOf(input.toUpperCase());
-    }
-
-    private void startSale(Scanner inputScanner) {
-        contr.startSale();
-        awaitRegisterInputs(inputScanner);
-    }
-
-    private void awaitRegisterInputs(Scanner inputScanner) {
-        boolean exit = false;
-        while (!exit) {
-            System.out.println("Enter: \n" +
-                               "[item identifier] - to register item\n" +
-                               "END - to end sale\n" +
-                               "EXIT - to exit program\n");
-
-            String userInput = inputScanner.nextLine();
-            if (checkRegisterInputs(userInput)) {
-                switch (getRegisterInput(userInput)) {
-                    case END -> {
-                        contr.endSale("null");
-                        awaitPaymentInput(inputScanner);
-                        exit = true;
-                    }
-                    case EXIT -> System.exit(0);
+    /**
+     * Handles the start menu input.
+     */
+    private int handleStartMenu(Scanner scanner) {
+        out.printAwaitStart();
+        String input = scanner.nextLine().trim();
+        if (isValidInput(input, StartInputs.values())) {
+            return switch (StartInputs.valueOf(input.toUpperCase())) {
+                case AUTO -> 4;
+                case START -> {
+                    controller.startSale();
+                    yield 2;
                 }
-            } else {
-                contr.registerItem(userInput);
+                case EXIT -> 5;
+            };
+        }
+        out.printInvalidInput();
+        return 1;
+    }
+
+    /**
+     * Handles the register menu input.
+     */
+    private int handleRegisterMenu(Scanner scanner) {
+        out.printAwaitRegister();
+        String input = scanner.nextLine().trim();
+        if (isValidInput(input, RegisterInputs.values())) {
+            return switch (RegisterInputs.valueOf(input.toUpperCase())) {
+                case END -> {
+                    controller.endSale("null");
+                    yield 3;
+                }
+                case EXIT -> 5;
+            };
+        }
+        registerItem(input);
+        return 2;
+    }
+
+    /**
+     * Handles the payment input.
+     */
+    private int handlePaymentMenu(Scanner scanner) {
+        out.printAwaitPayment();
+        String input = scanner.nextLine().trim();
+        if (isValidDouble(input)) {
+            controller.processSale(Double.parseDouble(input));
+            return 1;
+        }
+        out.printInvalidInput();
+        return 3;
+    }
+
+    private int autoRegister() {
+        controller.startSale();
+
+        registerItem("1");
+        registerItem("5");
+        registerItem("4");
+        registerItem("1");
+        registerItem("5");
+        registerItem("3");
+
+        view.displayTotalPrice(controller.endSale("null"));
+        controller.processSale(700);
+        return 1;
+    }
+
+    /**
+     * Checks if the input matches any value in the given enum.
+     */
+    private boolean isValidInput(String input, Enum<?>[] validInputs) {
+        for (Enum<?> valid : validInputs) {
+            if (input.equalsIgnoreCase(valid.name())) {
+                return true;
             }
         }
+        return false;
     }
 
-    private boolean checkRegisterInputs(String input) {
-        return isValidInput(input, RegisterInputs.values());
-    }
-
-    private RegisterInputs getRegisterInput(String input) {
-        return RegisterInputs.valueOf(input.toUpperCase());
-    }
-
-    private void awaitPaymentInput(Scanner inputScanner) {
-        boolean exit = false;
-        while (!exit) {
-            System.out.println("Enter: \n" +
-                               "[payment] - to process payment\n");
-
-            String userInput = inputScanner.nextLine();
-            if (checkPaymentInputs(userInput)) {
-                contr.processSale(Double.parseDouble(userInput));
-                exit = true;
-            } else {
-                System.out.println("Invalid payment input.");
-            }
-        }
-    }
-
-    private boolean checkPaymentInputs(String input) {
+    private boolean isValidDouble(String input) {
         try {
             Double.parseDouble(input);
             return true;
@@ -174,24 +230,12 @@ class TestView {
         }
     }
 
-    private boolean isValidInput(String input, Enum<?>[] validInputs) {
-        for (Enum<?> validInput : validInputs) {
-            if (input.equalsIgnoreCase(validInput.name())) {
-                return true;
-            }
+    private void registerItem(String itemID) {
+        ItemDTO item = controller.registerItem(itemID);
+        if (item == null) {
+            view.itemNotFound(itemID);
+        } else {
+            view.printAddedItem(item);
         }
-        return false;
-    }
-
-    private void autoRegister() {
-        contr.startSale();
-        contr.registerItem("1");
-        contr.registerItem("5");
-        contr.registerItem("4");
-        contr.registerItem("1");
-        contr.registerItem("5");
-        contr.registerItem("3");
-        contr.endSale("null");
-        contr.processSale(700);
     }
 }

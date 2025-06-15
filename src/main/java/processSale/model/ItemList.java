@@ -35,16 +35,12 @@ public class ItemList {
      * Increases the quantity of an existing item in the list.
      * 
      * @param itemID The unique identifier of the item.
-     * @return The id, name, price, VAT and description of the added item
-     *         as a string.
      */
-    public String increaseQuantity(String itemID) {
+    public void increaseQuantity(String itemID) {
         int quantity = getItemQuantity(itemID);
         if (quantity != 0) {
             itemsQuantity.put(itemID, ++quantity);
-            return GetAddedItemPrintOut(getItem(itemID));
         }
-        return "An error ocurred. Could not add item.";
     }
 
     /**
@@ -65,26 +61,9 @@ public class ItemList {
      * @return The id, name, price, VAT and description of the added item
      *         as a string.
      */
-    public String addNewItem(ItemDTO item) {
+    public void addNewItem(ItemDTO item) {
         itemsMeta.put(item.getID(), item);
         itemsQuantity.put(item.getID(), 1);
-        return GetAddedItemPrintOut(item);
-    }
-
-    /**
-     * Creates a printout of the details of an added or updated item.
-     * 
-     * @param item The {@link ItemDTO} object representing the item.
-     * @return The id, name, price, VAT and description of the added item
-     *         as a string.
-     */
-    private String GetAddedItemPrintOut(ItemDTO item) {
-        return String.format("Added 1 item with ID %s:%n" +
-                             "Item Name: %s%n" +
-                             "Price: %.2f SEK%n" +
-                             "VAT: %.0f%%%n" +
-                             "Description: %s%n%n",
-                             item.getID(), item.getName(), item.getPrice(), item.getVATRate() * 100, item.getDescription());
     }
 
     /**
