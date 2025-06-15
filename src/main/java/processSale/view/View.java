@@ -34,14 +34,29 @@ public class View {
         testing.awaitInputs();
     }
 
+    /**
+     * Displays a message indicating that an item was not found in the inventory.
+     *
+     * @param itemID The ID of the item that was not found.
+     */
     public void itemNotFound(String itemID) {
         System.out.println("Item not found in inventory: " + itemID);
     }
 
+    /**
+     * Displays the total price of the sale.
+     *
+     * @param totalPrice The total price to display.
+     */
     public void displayTotalPrice(double totalPrice) {
         System.out.printf("Sale ended. Total price: %.2f SEK%n", totalPrice);
     }
 
+    /**
+     * Displays information about an added item and the current totals.
+     *
+     * @param addedItem The string representation of the added item.
+     */
     public void displayAddedItem(String addedItem) {
         System.out.println(addedItem);
         System.out.println(controller.getTotals());
@@ -125,6 +140,7 @@ class TestView {
 
     /**
      * Main loop for handling user input and navigating between stages.
+     * Handles the flow between start, register, payment, automation, and exit.
      */
     public void awaitInputs() {
         try (Scanner scanner = new Scanner(System.in)) {
@@ -143,6 +159,9 @@ class TestView {
 
     /**
      * Handles the start menu input.
+     *
+     * @param scanner The scanner to read user input.
+     * @return The next stage as an integer.
      */
     private int handleStartMenu(Scanner scanner) {
         out.printAwaitStart();
@@ -163,6 +182,9 @@ class TestView {
 
     /**
      * Handles the register menu input.
+     *
+     * @param scanner The scanner to read user input.
+     * @return The next stage as an integer.
      */
     private int handleRegisterMenu(Scanner scanner) {
         out.printAwaitRegister();
@@ -182,6 +204,9 @@ class TestView {
 
     /**
      * Handles the payment input.
+     *
+     * @param scanner The scanner to read user input.
+     * @return The next stage as an integer.
      */
     private int handlePaymentMenu(Scanner scanner) {
         out.printAwaitPayment();
@@ -194,6 +219,11 @@ class TestView {
         return 3;
     }
 
+    /**
+     * Automates the registration of several items and processes a payment.
+     *
+     * @return The next stage as an integer.
+     */
     private int autoRegister() {
         controller.startSale();
 
@@ -211,6 +241,10 @@ class TestView {
 
     /**
      * Checks if the input matches any value in the given enum.
+     *
+     * @param input       The user input string.
+     * @param validInputs The array of valid enum values.
+     * @return True if input matches a valid enum value, otherwise false.
      */
     private boolean isValidInput(String input, Enum<?>[] validInputs) {
         for (Enum<?> valid : validInputs) {
@@ -221,6 +255,12 @@ class TestView {
         return false;
     }
 
+    /**
+     * Checks if the input string can be parsed as a double.
+     *
+     * @param input The user input string.
+     * @return True if the input is a valid double, otherwise false.
+     */
     private boolean isValidDouble(String input) {
         try {
             Double.parseDouble(input);
@@ -230,6 +270,12 @@ class TestView {
         }
     }
 
+    /**
+     * Registers an item with the given item ID using the controller.
+     * Displays the result in the view.
+     *
+     * @param itemID The ID of the item to register.
+     */
     private void registerItem(String itemID) {
         ItemDTO item = controller.registerItem(itemID);
         if (item == null) {

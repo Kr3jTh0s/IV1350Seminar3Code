@@ -47,18 +47,19 @@ public class Sale {
 
     /**
      * Increases the quantity of an item in the current sale based on its item ID.
-     * If the item does not exist in the sale, no action is taken.
+     * If the item exists, its quantity is increased and the sale totals are
+     * updated.
      * 
      * @param itemID The unique identifier of the item whose quantity is to be
      *               increased.
-     * @return The added item's information and the updated sale totals as a
-     *         string.
+     * @return The {@link ItemDTO} for the updated item, or {@code null} if the item
+     *         does not exist in the sale.
      */
     public ItemDTO increaseItemQuantity(String itemID) {
         if (items.checkItem(itemID)) {
             items.increaseQuantity(itemID);
             updateSale(items.getItem(itemID));
-            return (items.getItem(itemID));
+            return items.getItem(itemID);
         }
         return null;
     }
@@ -67,8 +68,6 @@ public class Sale {
      * Adds a new item to the current sale and updates the sale totals.
      * 
      * @param item The {@link ItemDTO} object representing the item to be added.
-     * @return The added item's information and the updated sale totals as a
-     *         string.
      */
     public void addItem(ItemDTO item) {
         items.addNewItem(item);
@@ -88,7 +87,8 @@ public class Sale {
     /**
      * Creates a printout of the current sale's total cost and VAT.
      * 
-     * @return The current sale's total cost and VAT as a string.
+     * @return A string representing the current sale's total cost (including VAT)
+     *         and total VAT.
      */
     public String getTotals() {
         return String.format("Total cost (incl. VAT): %.2f SEK%n" +

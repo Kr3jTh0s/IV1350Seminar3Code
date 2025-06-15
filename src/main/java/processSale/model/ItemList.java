@@ -54,12 +54,9 @@ public class ItemList {
     }
 
     /**
-     * Adds a new item to the list with an initial quantity of 1 before
-     * returning a printout of the added item information.
+     * Adds a new item to the list with an initial quantity of 1.
      * 
      * @param item The {@link ItemDTO} object representing the item to add.
-     * @return The id, name, price, VAT and description of the added item
-     *         as a string.
      */
     public void addNewItem(ItemDTO item) {
         itemsMeta.put(item.getID(), item);

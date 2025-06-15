@@ -44,8 +44,10 @@ public class Controller {
      * Registers an item in the current sale. If the item already exists in the
      * sale, its quantity is increased. Otherwise, the item is retrieved from the
      * inventory system and added to the sale.
-     * 
+     *
      * @param itemID The unique identifier of the item to be registered.
+     * @return The {@link ItemDTO} object representing the registered item, or
+     *         {@code null} if not found in inventory.
      */
     public ItemDTO registerItem(String itemID) {
         if (currentSale.itemExists(itemID)) {
@@ -59,7 +61,7 @@ public class Controller {
         return item;
     }
 
-    public String getTotals(){
+    public String getTotals() {
         return currentSale.getTotals();
     }
 
@@ -67,8 +69,9 @@ public class Controller {
      * Ends the current sale and calculates the total price. This method can be
      * extended to include additional operations, such as applying discounts or
      * notifying the view.
-     * 
+     *
      * @param customerID The unique identifier of the customer (currently unused).
+     * @return The total price of the sale as a double.
      */
     public double endSale(String customerID) {
         return currentSale.getRunningTotal();
